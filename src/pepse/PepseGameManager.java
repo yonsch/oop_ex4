@@ -9,6 +9,8 @@ import danogl.util.Vector2;
 import pepse.world.Block;
 import pepse.world.Terrain;
 
+import java.util.List;
+
 import static pepse.world.Sky.create;
 
 public class PepseGameManager extends GameManager {
@@ -43,7 +45,10 @@ public class PepseGameManager extends GameManager {
         gameObjects().addGameObject(this.sky, Layer.BACKGROUND);
 
         Terrain terrain = new Terrain(windowDimensions, 0);
-        gameObjects().addGameObject(terrain.createBlock(400, 400));
+        List<GameObject> blocks = terrain.createInRange(0, (int)WINDOW_WIDTH);
+        for (GameObject obj : blocks) {
+            gameObjects().addGameObject(obj, Layer.STATIC_OBJECTS);
+        }
     }
 
     @Override
