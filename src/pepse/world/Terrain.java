@@ -45,7 +45,7 @@ public class Terrain {
         int maxHeight = (int) groundHeightAt(x);
         int minHeight = maxHeight + (TERRAIN_DEPTH * Block.SIZE);
         List<GameObject> column = new ArrayList<>();
-        for (int y = maxHeight; y <= minHeight; y += Block.SIZE - 2) {
+        for (int y = maxHeight; y <= minHeight; y += Block.SIZE) {
             column.add(createBlock(x, y));
         }
         return column;
@@ -56,7 +56,7 @@ public class Terrain {
         int currentX = (minX / Block.SIZE) * Block.SIZE;
         while (currentX <= maxX) {
             var column = createColumn(currentX);
-            currentX += Block.SIZE - 2;
+            currentX += Block.SIZE;
             blocks.addAll(column);
         }
         return blocks;
