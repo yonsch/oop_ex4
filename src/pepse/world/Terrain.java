@@ -3,6 +3,7 @@ package pepse.world;
 import danogl.GameObject;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.utils.ColorSupplier;
 import pepse.utils.NoiseGenerator;
 
 import java.awt.Color;
@@ -25,7 +26,8 @@ public class Terrain {
     public Block createBlock(int x, int y) {
         Block block = new Block(
                 new Vector2(x, y),
-                new RectangleRenderable(BASE_GROUND_COLOR)
+                new RectangleRenderable(ColorSupplier.approximateColor(
+                        BASE_GROUND_COLOR))
         );
 //        block.setTag(GROUND_TAG);
         return block;
