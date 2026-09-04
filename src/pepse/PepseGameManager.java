@@ -4,10 +4,11 @@ import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.*;
-import danogl.gui.rendering.ImageRenderable;
 import danogl.util.Vector2;
-import pepse.world.Block;
+import pepse.world.daynight.Night;
+import pepse.world.daynight.Sun;
 import pepse.world.Terrain;
+import pepse.world.daynight.SunHalo;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class PepseGameManager extends GameManager {
     private Vector2 windowDimensions;
 
     private GameObject sky;
+    private GameObject night;
 
     public PepseGameManager(String windowTitle, Vector2 windowDimension) {
         super(windowTitle, windowDimension);
@@ -49,6 +51,15 @@ public class PepseGameManager extends GameManager {
         for (GameObject obj : blocks) {
             gameObjects().addGameObject(obj, Layer.STATIC_OBJECTS);
         }
+
+        this.night = Night.create(windowDimensions, 30f);
+        gameObjects().addGameObject(this.night, 10);
+
+        GameObject sun = Sun.create(windowDimensions, 30f);
+        gameObjects().addGameObject(sun, Layer.BACKGROUND);
+
+        GameObject sunHalo = SunHalo.create(sun);
+        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
     }
 
     @Override
