@@ -19,7 +19,7 @@ public class Terrain {
     private static final int TERRAIN_DEPTH = 30;
 
     public Terrain(Vector2 windowDimensions, int seed) {
-        groundHeightAtX0 = windowDimensions.y() * 2f / 3f;
+        groundHeightAtX0 = windowDimensions.y() * 2;
         noiseGenerator = new NoiseGenerator(seed, (int)groundHeightAtX0);
     }
 
@@ -45,7 +45,7 @@ public class Terrain {
         int maxHeight = (int) groundHeightAt(x);
         int minHeight = maxHeight + (TERRAIN_DEPTH * Block.SIZE);
         List<GameObject> column = new ArrayList<>();
-        for (int y = maxHeight; y <= minHeight; y += Block.SIZE) {
+        for (int y = maxHeight; y <= minHeight; y += Block.SIZE - 2) {
             column.add(createBlock(x, y));
         }
         return column;
@@ -56,7 +56,7 @@ public class Terrain {
         int currentX = (minX / Block.SIZE) * Block.SIZE;
         while (currentX <= maxX) {
             var column = createColumn(currentX);
-            currentX += Block.SIZE;
+            currentX += Block.SIZE - 2;
             blocks.addAll(column);
         }
         return blocks;
