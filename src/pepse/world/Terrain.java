@@ -19,7 +19,7 @@ public class Terrain {
     private static final int TERRAIN_DEPTH = 30;
 
     public Terrain(Vector2 windowDimensions, int seed) {
-        groundHeightAtX0 = windowDimensions.y() * 2f / 3f;
+        groundHeightAtX0 = windowDimensions.y() * 2;
         noiseGenerator = new NoiseGenerator(seed, (int)groundHeightAtX0);
     }
 
