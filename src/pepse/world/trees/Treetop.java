@@ -69,14 +69,14 @@ public class Treetop {
     }
 
     private void addLeavesLogic(float x, float y) {
-        if (rand.nextFloat() <= LEAF_PROBABILITY) {
+        if(rand.nextFloat() <= LEAF_PROBABILITY) {
             GameObject leaf = createLeaf(new Vector2(x, y));
             leavesAndFruits.add(leaf);
         }
     }
 
     private void addFlowersLogic(float x, float y, Consumer<Integer> energyCallback) {
-        if (rand.nextFloat() <= FRUIT_PROBABILITY) {
+        if(rand.nextFloat() <= FRUIT_PROBABILITY) {
             FruitProperties props = new FruitProperties.Builder()
                     .randomizeAttributes(rand)
                     .build();

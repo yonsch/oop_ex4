@@ -122,7 +122,7 @@ public class PepseGameManager extends GameManager implements AvatarLocationObser
     public void updateAvatarLocation(float x) {
         int CHUNK_SIZE = Block.SIZE * 4;
 
-        if (x + TERRAIN_MARGIN > rightmostCol) {
+        if(x + TERRAIN_MARGIN > rightmostCol) {
 
             List<GameObject> toAddBlocks = terrain.createInRange(rightmostCol, rightmostCol + CHUNK_SIZE - 1);
             List<GameObject> toAddTrees = flora.createInRange(rightmostCol, rightmostCol + CHUNK_SIZE - 1);
@@ -140,7 +140,7 @@ public class PepseGameManager extends GameManager implements AvatarLocationObser
             leftmostCol += CHUNK_SIZE;
         }
 
-        else if (x - TERRAIN_MARGIN < leftmostCol) {
+        else if(x - TERRAIN_MARGIN < leftmostCol) {
 
             List<GameObject> toAddBlocks = terrain.createInRange(leftmostCol - CHUNK_SIZE, leftmostCol - 1);
             List<GameObject> toAddTrees = flora.createInRange(leftmostCol - CHUNK_SIZE, leftmostCol - 1);
@@ -207,7 +207,8 @@ public class PepseGameManager extends GameManager implements AvatarLocationObser
         gameObjects().addGameObject(avatar, Layer.DEFAULT);
 
         // Create Energy UI Display
-        EnergyUI energyUI = new EnergyUI(avatar::getEnergy);
+        EnergyUI energyUI = new EnergyUI();
+        avatar.energyObserversubscribe(energyUI);
         gameObjects().addGameObject(energyUI, Layer.UI);
 
         // Set Camera Tracking with initial offset

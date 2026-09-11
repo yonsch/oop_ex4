@@ -27,7 +27,7 @@ public class Column {
         for (int y = maxHeight; y <= minHeight; y += Block.SIZE) {
             Block block = createBlock(x, y, color);
 
-            if (y == maxHeight) {
+            if(y == maxHeight) {
                 block.setTag(PepseGameManager.GROUND_SURFACE_TAG);
             } else {
                 block.setTag(PepseGameManager.GROUND_INNER_TAG);

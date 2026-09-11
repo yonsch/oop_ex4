@@ -37,7 +37,10 @@ public class Avatar extends GameObject {
     private int energy;
     private AvatarState curState;
     private GameObject currentSurface = null;
+
     private final List<AvatarLocationObserver> locationObservers = new ArrayList<>();
+    private final List<EnergyObserver> energyObservers = new ArrayList<>();
+
 
     // ~~~~~~~~~~~~~~
     //   CONSTRUCTOR
@@ -97,13 +100,20 @@ public class Avatar extends GameObject {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
     //   CLASS FUNCTIONALITIES
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
     /**
      * Updates the avatar's energy by adding or subtracting the specified amount,
-     * ensuring the result remains clamped between the constants ENERGY_MIN and ENERGY_MAX.
+     * ensuring the result remains clamped between ENERGY_MIN ENERGY_MAX.
+     * If the energy level changes, notifies all subscribes Energy observers.
      * @param num the amount of energy to add (positive) or subtract (negative).
      */
     public void updateEnergy(int num) {
+        int oldEnergy = this.energy;
         this.energy = Math.max(ENERGY_MIN, Math.min(ENERGY_MAX, this.energy + num));
+
+        if(this.energy != oldEnergy) {
+            notifyEnergyObservers();
+        }
     }
 
     /**
@@ -112,7 +122,7 @@ public class Avatar extends GameObject {
      * @param newState the target AvatarState to transition into.
      */
     public void changeState(AvatarState newState) {
-        if (curState != null) {
+        if(curState != null) {
             curState.exit(this);
         }
         curState = newState;
@@ -138,21 +148,21 @@ public class Avatar extends GameObject {
      * surface it is currently colliding with, snapping it back to the surface.
      */
     public void snapToSurface() {
-        if (currentSurface == null) { return; }
+        if(currentSurface == null) { return; }
 
-        if (currentSurface.getTag().equals(PepseGameManager.GROUND_INNER_TAG)) {
-            if (groundHeightAt != null) {
+        if(currentSurface.getTag().equals(PepseGameManager.GROUND_INNER_TAG)) {
+            if(groundHeightAt != null) {
                 float avatarCenterX = getCenter().x();
                 float surfaceTopY = groundHeightAt.apply(avatarCenterX);
 
                 transform().setTopLeftCornerY(surfaceTopY - getDimensions().y());
                 transform().setVelocityY(0);
             }
-        } else if (currentSurface.getTag().equals(PepseGameManager.GROUND_SURFACE_TAG)) {
+        } else if(currentSurface.getTag().equals(PepseGameManager.GROUND_SURFACE_TAG)) {
             float blockTopY = currentSurface.getTopLeftCorner().y();
             float avatarBottomY = getTopLeftCorner().y() + getDimensions().y();
 
-            if (avatarBottomY > blockTopY && avatarBottomY - blockTopY <= EPSILON) {
+            if(avatarBottomY > blockTopY && avatarBottomY - blockTopY <= EPSILON) {
                 transform().setTopLeftCornerY(blockTopY - getDimensions().y());
                 transform().setVelocityY(0);
             }
@@ -166,12 +176,42 @@ public class Avatar extends GameObject {
         this.currentSurface = null;
     }
 
+    // ~~~~~~~~~~~~~~~~~~~~~
+    //   OBSERVERS LOGIC
+    // ~~~~~~~~~~~~~~~~~~~~~
     /**
      * Add a location observer
      * @param observer Location observer
      */
     public void locationSubscribe(AvatarLocationObserver observer) {
         locationObservers.add(observer);
+    }
+
+    /**
+     * Registers an Energy observer to receive notifications on energy changes.
+     * Automatically notifies the new observer of the current energy level.
+     * @param observer the EnergyObserver to register.
+     */
+    public void energyObserversubscribe(EnergyObserver observer) {
+        energyObservers.add(observer);
+        observer.uponEnergyChanged(this.energy);
+    }
+
+    /**
+     * Unregisters an Energy observer from receiving energy changes.
+     * @param observer the {@link EnergyObserver} to remove.
+     */
+    public void unregisterEnergyObserver(EnergyObserver observer) {
+        energyObservers.remove(observer);
+    }
+
+    /**
+     * Notifies all registered Energy observers of the current energy level.
+     */
+    private void notifyEnergyObservers() {
+        for(EnergyObserver observer : energyObservers) {
+            observer.uponEnergyChanged(this.energy);
+        }
     }
 
     // ~~~~~~~~~~~~~
@@ -189,7 +229,7 @@ public class Avatar extends GameObject {
         for (AvatarLocationObserver observer : locationObservers) {
             observer.updateAvatarLocation(this.getCenter().x());
         }
-        if (nextState != null && nextState != curState) {
+        if(nextState != null && nextState != curState) {
             changeState(nextState);
         }
     }
@@ -204,7 +244,7 @@ public class Avatar extends GameObject {
         super.onCollisionEnter(other, collision);
         currentSurface = other;
 
-        if (isSurfaceObj(other) && getVelocity().y() > 0) {
+        if(isSurfaceObj(other) && getVelocity().y() > 0) {
             transform().setVelocityY(0);
         }
     }
@@ -227,7 +267,7 @@ public class Avatar extends GameObject {
     @Override
     public void onCollisionExit(GameObject other) {
         super.onCollisionExit(other);
-        if (other == currentSurface) {
+        if(other == currentSurface) {
             currentSurface = null;
         }
     }

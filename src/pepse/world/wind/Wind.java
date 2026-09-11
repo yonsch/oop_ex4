@@ -67,7 +67,7 @@ public class Wind {
         int netPower = strength.getPower() - weight.getWeightCost() + 1;
 
         // return if the object is too heavy for the wind to sway
-        if (netPower <= 0) { return; }
+        if(netPower <= 0) { return; }
 
         float maxAngle = weight.getBaseAngle() * netPower;
         float widthDelta = weight.getBaseWidthDelta() * netPower;
@@ -90,7 +90,7 @@ public class Wind {
         );
 
         // Dimension sway
-        if (widthDelta > 0) {
+        if(widthDelta > 0) {
             Vector2 initialDims = target.getDimensions();
             Vector2 minDims = new Vector2(initialDims.x() - widthDelta, initialDims.y());
             Vector2 maxDims = new Vector2(initialDims.x() + widthDelta, initialDims.y());

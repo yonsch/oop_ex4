@@ -5,65 +5,41 @@ import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
 
-import java.util.function.Supplier;
-
 /**
- * An element that displays the avatar's current energy percentage on screen.
+ * A display of the avatar's current energy percentage.
+ * Implements EnergyObserver interface so it is notified directly whenever energy changes.
  */
-public class EnergyUI extends GameObject {
+public class EnergyUI extends GameObject implements EnergyObserver {
 
     private static final Vector2 TOP_LEFT_CORNER = new Vector2(20, 20);
     private static final Vector2 DIMENSIONS = new Vector2(40, 40);
     private static final String ENERGY_STRING_FORMAT = "%d%%";
 
-    private final Supplier<Integer> energySupplier;
     private final TextRenderable textRenderable;
-    private int latestEnergy = -1;
-
-    // Clock logic to prevent the energy display from changing too often
-    private static final float REFRESH_INTERVAL = 0.1f;
-    private float timeSinceLastRefresh = 0f;
 
     /**
-     * Constructs a new EnergyUI instance with a default text renderable.
-     * @param energySupplier a functional callback supplying the current energy value.
+     * Constructs a new EnergyUI instance initialized to 100%.
      */
-    public EnergyUI(Supplier<Integer> energySupplier) {
-        this(energySupplier, new TextRenderable("100%"));
+    public EnergyUI() {
+        this(new TextRenderable("100%"));
     }
 
     /**
-     * Constructs a new EnergyUI instance with a custom text renderable.
-     * @param energySupplier a functional callback supplying the current energy value.
+     * Constructs a new EnergyUI instance with a custom TextRenderable (clumped between 0 and 100).
      * @param textRenderable the renderable used to display text.
      */
-    public EnergyUI(Supplier<Integer> energySupplier, TextRenderable textRenderable) {
+    public EnergyUI(TextRenderable textRenderable) {
         super(TOP_LEFT_CORNER, DIMENSIONS, textRenderable);
-        this.energySupplier = energySupplier;
         this.textRenderable = textRenderable;
         setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
     }
 
     /**
-     * Updates the UI display on each frame, querying the energy supplier at
-     * intervals and updating the displayed text whenever the value changes.
-     * @param deltaTime the time passed since the last frame in seconds.
+     * Updates the text display when notified of an energy change.
+     * @param currentEnergy the new energy percentage.
      */
     @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        timeSinceLastRefresh += deltaTime;
-
-        // update if enough time has passed and reset clock
-        if(timeSinceLastRefresh >= REFRESH_INTERVAL) {
-            // reset clock
-            timeSinceLastRefresh %= REFRESH_INTERVAL;
-            // update step
-            int curEnergy = energySupplier.get();
-            if(curEnergy != latestEnergy) {
-                latestEnergy = curEnergy;
-                textRenderable.setString(String.format(ENERGY_STRING_FORMAT, curEnergy));
-            }
-        }
+    public void uponEnergyChanged(int currentEnergy) {
+        textRenderable.setString(String.format(ENERGY_STRING_FORMAT, currentEnergy));
     }
 }

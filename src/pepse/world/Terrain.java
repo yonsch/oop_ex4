@@ -78,7 +78,7 @@ public class Terrain {
 
         while (currentX <= maxX) {
             currentX += Block.SIZE;
-            if (columns.containsKey(currentX)) {
+            if(columns.containsKey(currentX)) {
                 blocks.addAll(columns.get(currentX).getBlocks());
                 columns.remove(currentX);
             }

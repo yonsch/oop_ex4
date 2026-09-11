@@ -52,7 +52,7 @@ public class Fruit extends GameObject {
         super.onCollisionEnter(other, collision);
 
         // there is no collision if the fruit had already been eaten this cycle
-        if (!isEaten && other.getTag().equals(PepseGameManager.AVATAR_TAG)) {
+        if(!isEaten && other.getTag().equals(PepseGameManager.AVATAR_TAG)) {
             eat();
         }
     }
@@ -64,7 +64,7 @@ public class Fruit extends GameObject {
         this.isEaten = true;
         this.renderer().setOpaqueness(0f); // make the fruit invisible for this cycle
 
-        if (energyConsumer != null) {
+        if(energyConsumer != null) {
             energyConsumer.accept(properties.getEnergyGain());
         }
         new ScheduledTask(

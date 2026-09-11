@@ -84,7 +84,7 @@ public class Flora {
         int maximalX = (maxX / MEASURE_UNIT) * MEASURE_UNIT;
 
         for(int x = minimalX; x < maximalX; x+= MEASURE_UNIT) {
-            if (trees.containsKey(x)) {
+            if(trees.containsKey(x)) {
                 items.addAll(trees.get(x).getTree());
                 trees.remove(x);
             }

@@ -83,7 +83,7 @@ public class FruitProperties {
          * @return this builder instance for method chaining.
          */
         public Builder setLarge(boolean isLarge) {
-            if (isLarge) {
+            if(isLarge) {
                 this.dimensions = this.dimensions.mult(LARGE_SIZE_MULTIPLIER);
                 this.energyGain += LARGE_ENERGY_BONUS;
             }
@@ -96,7 +96,7 @@ public class FruitProperties {
          * @return this builder instance for method chaining.
          */
         public Builder setGolden(boolean isGolden) {
-            if (isGolden) {
+            if(isGolden) {
                 this.color = ColorSupplier.blendGold(this.color, GOLD_BLEND_RATIO);
                 this.energyGain *= GOLDEN_ENERGY_BONUS;
             }
@@ -109,7 +109,7 @@ public class FruitProperties {
          * @return this builder instance for method chaining.
          */
         public Builder setRotten(boolean isRotten) {
-            if (isRotten) {
+            if(isRotten) {
                 this.color = this.color.darker().darker().darker();
                 this.energyGain -= ROTTEN_ENERGY_PENALTY;
             }
